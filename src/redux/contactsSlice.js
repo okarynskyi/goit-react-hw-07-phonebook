@@ -31,14 +31,14 @@ const contactsSlice = createSlice({
         [addContact.fulfilled](state, action) {
             state.isLoading = false;
             state.error = null;
-            state.items.push(action.payload);
+            state.items.unshift(action.payload);
         },
         [addContact.rejected]: handleRejected,
         [deleteContact.pending]: handlePending,
         [deleteContact.fulfilled](state, action) {
             state.isLoading = false;
             state.error = null;
-            const index = state.items.find(
+            const index = state.items.findIndex(
                 contact => contact.id === action.payload.id
             );
             state.items.splice(index, 1);
