@@ -1,12 +1,24 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { getContacts, getFilter } from 'redux/selectors';
-import { removeContact } from 'redux/contactsSlice';
-import css from './ContactList.module.css';
+import { useEffect } from 'react';
+import {
+  selectContacts,
+  selectError,
+  selectFilter,
+  selectIsLoading,
+} from 'redux/selectors';
+import { fetchContacts, deleteContact } from 'redux/contactsOperations';
+import css from './ContactList.module.css'; 
 
 export const ContactList = () => {
-  const contacts = useSelector(getContacts);
-  const filter = useSelector(getFilter);
+  const contacts = useSelector(selectContacts);
+  const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
+  const filter = useSelector(selectFilter);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   const getFilterContacts = () => {
     if (!filter) {
@@ -27,8 +39,15 @@ export const ContactList = () => {
         return <li key={id} className={css.list}>{name}: {number}
             <button onClick={() => dispatch(removeContact(id))} className={css.list_button}>Delete</button>
         </li>
-    })
-    return (
+  })
+  
+  return (
+    <div>
+      {isLoading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
+      {contacts.length > 0 && (
         <ul>{elements}</ul>
-    )
+      )}
+    </div>
+  )  
 }
