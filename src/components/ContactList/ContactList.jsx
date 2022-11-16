@@ -25,9 +25,9 @@ export const ContactList = () => {
       return contacts;
     }
     const normalizedFilter = filter.toLocaleLowerCase();
-    const filterContacts = contacts.filter(({ name, number }) => {
-      const normalizedName = name.toLowerCase();
-      const normalizedNumber = number.toLowerCase();
+    const filterContacts = contacts.filter(({ name, phone }) => {
+      const normalizedName = name.toLocaleLowerCase();
+      const normalizedNumber = phone.toLocaleLowerCase();
       const result = normalizedName.includes(normalizedFilter) || normalizedNumber.includes(normalizedFilter);
       return result
     });
@@ -35,9 +35,9 @@ export const ContactList = () => {
   };
   const filteredContacts = getFilterContacts();
 
-  const elements = filteredContacts.map(({ name, number, id }) => {
-        return <li key={id} className={css.list}>{name}: {number}
-            <button onClick={() => dispatch(removeContact(id))} className={css.list_button}>Delete</button>
+  const elements = filteredContacts.map(({ name, phone, id }) => {
+        return <li key={id} className={css.list}>{name}: {phone}
+            <button onClick={() => dispatch(deleteContact(id))} className={css.list_button}>Delete</button>
         </li>
   })
   
@@ -45,9 +45,7 @@ export const ContactList = () => {
     <div>
       {isLoading && <p>Loading...</p>}
       {error && <p>{error}</p>}
-      {contacts.length > 0 && (
-        <ul>{elements}</ul>
-      )}
+      {contacts.length > 0 && <ul>{elements}</ul>}
     </div>
   )  
 }
